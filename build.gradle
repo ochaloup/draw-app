@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply plugin: 'eclipse'
+
+repositories {
+  mavenCentral()
+}
+dependencies {
+  compile 'org.codehaus.groovy:groovy-all:2.1.6'
+  compile 'log4j:log4j:1.2.16'
+  compile 'javax.mail:mail:1.4.7'
+  testCompile 'junit:junit:4.+'
+}
+
+
+task exec (dependsOn: [classes], type: JavaExec) {
+  main = 'Shower'
+  classpath = sourceSets.main.runtimeClasspath
+  args 'popisky.txt'
+}
