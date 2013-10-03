@@ -27,7 +27,7 @@ class FileParser {
 		}
 
 		if(f != null && f.exists()) {
-			log.info("Loaded class '$fileName' as '${f.absolutePath}'")
+			log.info("Loaded file '$fileName' as '${f.absolutePath}'")
 			return f
 		} else {
 			throw new RuntimeException("We are not able to load file with name '$fileName'")

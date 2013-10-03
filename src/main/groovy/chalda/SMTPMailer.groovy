@@ -35,6 +35,10 @@ class SMTPMailer {
 	}
 
 	void sendMail(String to, String subject, String message){
+		sendMail([to], subject, message)
+	}
+	
+	void sendMail(List to, String subject, String message){
 		def props = new Properties()
 		props.put "mail.smtps.auth", "true"
 
@@ -44,7 +48,9 @@ class SMTPMailer {
 
 		msg.setSubject subject
 		msg.setText message
-		msg.addRecipients MimeMessage.RecipientType.TO, new InternetAddress(to)
+		to.each {
+			msg.addRecipients MimeMessage.RecipientType.TO, new InternetAddress(it)
+		}
 
 		def transport = session.getTransport "smtps"
 
