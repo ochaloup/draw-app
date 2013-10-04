@@ -15,4 +15,17 @@ class Util {
 			log.info(p.toStringLong())
 		}
 	}
+	
+	static String getNamesByDep(person, persons) {
+		String resNames = ""
+		person.dependencies.each { dep ->
+			persons.each { p ->
+				if(dep == p.id) {
+					if(resNames != null && !resNames.isEmpty()) resNames += ", "
+					resNames += p.name
+				}
+			}
+		}
+		return resNames
+	}
 }

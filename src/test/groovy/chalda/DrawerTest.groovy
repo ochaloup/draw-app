@@ -13,7 +13,7 @@ class DrawerTest {
 	List persons
 	List personsABC
 	List personsABCFail
-	List personMix
+	List personsLOTR
 	
 	def person1 = new Person(11, "Name#1", ["a@a.com"], [22])
 	def person2 = new Person(22, "Name#2", ["b@b.com"], [])
@@ -32,13 +32,8 @@ class DrawerTest {
 	// --
 	def personZ = new Person(26, "Z", ["mail"], [1,2,3,4,5,6,7,8,9])
 	
+	def frodo, gandalf, bifur, bombur, galadriel, elrond
 	
-	def Frodo = new Person(1, "Frodo", ["mail"], [22])
-	def Gandalf = new Person(2, "Gandalf", ["mail"], [])
-	def Bifur = new Person(3, "Bifur", ["mail"], [])
-	def Bombur = new Person(4, "Bombur", ["mail"], [])
-	def Galadriel = new Person(5, "Galadriel", ["mail"], [])
-	def Elrond = new Person(6, "Elrond", ["mail"], [])
 	
 	@Before
 	void before() {
@@ -53,6 +48,18 @@ class DrawerTest {
 		
 		personsABCFail = personsABC.clone()
 		personsABCFail << personZ
+	}
+	
+	private void newLotr() {
+		frodo = new Person(1, "Frodo", ["mail"], [2])
+		gandalf = new Person(2, "Gandalf", ["mail"], [1])
+		bifur = new Person(3, "Bifur", ["mail"], [4])
+		bombur = new Person(4, "Bombur", ["mail"], [3])
+		galadriel = new Person(5, "Galadriel", ["mail"], [6])
+		elrond = new Person(6, "Elrond", ["mail"], [5])
+		
+		personsLOTR = []
+		personsLOTR << frodo << gandalf << bifur << bombur << galadriel << elrond
 	}
 	
 	@Test
@@ -111,7 +118,7 @@ class DrawerTest {
 	}
 	
 	@Test
-	void testDraw3() {
+	void testDrawFail() {
 		def drawer = new Drawer();
 		def retCode = drawer.matcher(personsABCFail, personsABCFail)
 				
@@ -119,5 +126,26 @@ class DrawerTest {
 		Assert.assertTrue("No match is possible", personA.foundDraw == null)
 		
 		Util.logMatches(personsABCFail)
+	}
+	
+	@Test
+	void testDrawLotr() {
+		def drawer = new Drawer();
+	
+		for(int i=0; i<=1111; i++) {
+			log.debug("\n\n\nRun number:${i}")
+			newLotr()
+		
+			def retCode = drawer.matcher(personsLOTR)
+					
+			Util.logMatches(personsLOTR)
+			
+			Assert.assertTrue("Match not found", retCode)
+			Assert.assertTrue("Frodo can't be matched with Gandalf", frodo.foundDraw != gandalf)
+			Assert.assertTrue("Bifur can't be matched with Bombur", bifur.foundDraw != bombur)
+			Assert.assertTrue("Bombur can't be matched with Bifur", bombur.foundDraw != bifur)
+			Assert.assertTrue("Galadriel can't be matched with Elrond", galadriel.foundDraw != elrond)
+			Assert.assertTrue("Elrond can't be matched with Galadriel", elrond.foundDraw != galadriel)
+		}
 	}
 }

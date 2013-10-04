@@ -7,8 +7,8 @@ class Person {
 	private int id
 	
 	private String name
-	private List emails
-	private List dependencies
+	private List<String> emails
+	private List<Integer> dependencies
 	
 	private Person foundDraw
 	private boolean isMailSent = false;

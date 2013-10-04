@@ -21,8 +21,13 @@ class DataPreparerTest {
 		Assert.assertEquals("Prepared size of array does not match", 3, result.size())
 		Assert.assertEquals("Person1 email count does not match", 1, result[0].emails.size())
 		Assert.assertEquals("Person1 email does not match", email1, result[0].emails[0])
+		
 		Assert.assertEquals("Person2 email count does not match", 1, result[1].emails.size())
 		Assert.assertEquals("Person2 email does not match", email2, result[1].emails[0])
+		Assert.assertTrue(result[1].dependencies instanceof List)
+		
 		Assert.assertEquals("Person3 email count does not match", 2, result[2].emails.size())
+		Assert.assertEquals("Person3 dependencies count does not match", 2, result[2].dependencies.size())
+		Assert.assertTrue("Dependency has to be Integer type but is ${result[2].dependencies[0].getClass()}", result[2].dependencies[0] instanceof Integer)
 	}
 }

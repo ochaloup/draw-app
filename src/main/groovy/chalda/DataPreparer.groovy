@@ -22,9 +22,8 @@ class DataPreparer {
 			log.debug("Processing array $arr")
 			int id = arr[0].toInteger()
 			String name = arr[1]
-			List emails = arr[2].tokenize(',')
-			List dependencies = arr[3] == null ? [] : arr[3].toString().tokenize(',')
-			dependencies.collect {dependency -> Integer.valueOf(dependency)}
+			List<String> emails = arr[2].tokenize(',')
+			List<Integer> dependencies = (arr[3] == null) ? [] : arr[3].toString().tokenize(',').collect{it as int}
 			def p = new Person(id, name, emails, dependencies)
 			
 			if(persons.contains(p)) {

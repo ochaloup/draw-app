@@ -10,15 +10,19 @@ class Drawer {
 		List availablePersons = []
 		
 		persons.each{ p ->
-			log.debug("Comparing ${person} with dependencies ${person.dependencies} with person: ${p}")
+			log.debug("${person}>dependencies:${person.dependencies} with person: ${p}")
 			if(p == person) {
 				// person can't be chosen against the him hiMself
 				return
 			}
-			if(person.dependencies.contains(p.id) || person.dependencies.contains(p.name)) {
+			if(person.dependencies.contains(p.id) || p.id == person.dependencies || person.dependencies.contains(p.name)) {
 				// person has dependency to the current from the list - the current person is not availabe for the draw
 				return
 			}
+			log.debug("dependencies:${person.dependencies} and pid: ${p.id} - result: ${person.dependencies.contains(p.id)}")
+			log.debug(person.dependencies[0].getClass())
+			log.debug(p.id.getClass())
+			log.debug("Passed ${person}>dep:${person.dependencies} with person:${p} with id:${p.id}")
 			availablePersons.add(p)
 		}
 		
@@ -29,6 +33,13 @@ class Drawer {
 		Random rand = new Random()
 		def index = rand.nextInt(persons.size())
 		return persons[index] 
+	}
+	
+	/**
+	 * Just resend the method call :)
+	 */
+	boolean matcher(List persons) {
+		return matcher(persons, persons)
 	}
 	
 	/**
