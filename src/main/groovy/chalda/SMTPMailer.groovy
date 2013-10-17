@@ -11,55 +11,69 @@ import javax.mail.internet.MimeMessage
  */
 @Log4j
 class SMTPMailer {
-	private String username, password, host = "smtp.gmail.com"
-	private int port = 465
+  private String username, password, host = "smtp.gmail.com"
+  private int port = 465
+  private static int NO_AUTH_PORT = 25
 
-	SMTPMailer() {
-		username = ""
-		password = ""
-	}
-	SMTPMailer(String usename, String passcode) {
-		username = usename
-		password = passcode
-	}
-	SMTPMailer(String usename, String passcode, String hhost) {
-		username = usename
-		password = passcode
-		host = hhost
-	}
-	SMTPMailer(String usename, String passcode, String hhost, int pport) {
-		username = usename
-		password = passcode
-		host = hhost
-		port = pport
-	}
+  SMTPMailer() {
+    username = ""
+    password = ""
+  }
+  SMTPMailer(String usename, String passcode) {
+    username = usename
+    password = passcode
+  }
+  SMTPMailer(String usename, String passcode, String hhost) {
+    username = usename
+    password = passcode
+    host = hhost
+  }
+  SMTPMailer(String usename, String passcode, String hhost, int pport) {
+    username = usename
+    password = passcode
+    host = hhost
+    port = pport
+  }
 
-	void sendMail(String to, String subject, String message){
-		sendMail([to], subject, message)
-	}
-	
-	void sendMail(List to, String subject, String message){
-		def props = new Properties()
-		props.put "mail.smtps.auth", "true"
+  void sendMail(String to, String subject, String message){
+    sendMail([to], subject, message)
+  }
 
-		def session = Session.getDefaultInstance props, null
+  void sendMail(List to, String subject, String message){
+    def transaportProtocol
+    def props = new Properties()
+    if(port == NO_AUTH_PORT) {
+      log.debug "Using port $port and so using standard smtp withouth authentication"
+      props.put "mail.smtps.auth", "false"
+      transaportProtocol = "smtp"
+    } else {
+      log.debug "Using port $port and so authenticated smtp"
+      props.put "mail.smtps.auth", "true"
+      transaportProtocol = "smtps"
+    }
 
-		def msg = new MimeMessage(session)
+    def session = Session.getDefaultInstance props, null
 
-		msg.setSubject subject
-		msg.setText message
-		to.each {
-			msg.addRecipients MimeMessage.RecipientType.TO, new InternetAddress(it)
-		}
+    def msg = new MimeMessage(session)
 
-		def transport = session.getTransport "smtps"
+    msg.setSubject subject
+    msg.setText message
+    msg.setSender new InternetAddress(username)
+    msg.setReplyTo new InternetAddress(username)
+    msg.setHeader "From",  username
+    to.each {
+      msg.addRecipients MimeMessage.RecipientType.TO, new InternetAddress(it)
+    }
 
-		try {
-			transport.connect (host, port, username, password)
-			transport.sendMessage (msg, msg.getAllRecipients())
-		} catch (Exception e) {
-			log.error(e)
-			throw new RuntimeException("Message sent error", e)
-		}
-	}
+    def transport = session.getTransport transaportProtocol
+
+    try {
+      log.debug "Connecting to $host:$port with $username/$password to send message to ${msg.getAllRecipients()}"
+      transport.connect (host, port, username, password)
+      transport.sendMessage (msg, msg.getAllRecipients())
+    } catch (Exception e) {
+      log.error(e)
+      throw new RuntimeException("Message sent error", e)
+    }
+  }
 }
