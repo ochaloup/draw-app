@@ -12,8 +12,20 @@ dependencies {
 }
 
 
-task exec (dependsOn: [classes], type: JavaExec) {
-  main = 'Shower'
+// run as:
+// gradle exec -Padmin=<email> -Pinput=<file_in_resources> -Psubject=<what you want>
+task exec (dependsOn: [classes], type: JavaExec) { 
+  if(!project.hasProperty('input')) {
+    ext.input = 'draw.txt'
+  }
+  if(!project.hasProperty('admin')) {
+    ext.admin = 'a@a.com'
+  }
+  if(!project.hasProperty('subject')) {
+    ext.subject = 'A draw'
+  }
+  
+  main = 'chalda.Main'
   classpath = sourceSets.main.runtimeClasspath
-  args 'popisky.txt'
+  args "$input", "$admin", "$subject"
 }

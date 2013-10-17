@@ -1,0 +1,7 @@
+1|Thorin|thorin@erebor.home|2
+2|Balin|balin@erebor.home|1
+3|Bifur|bifur@erebor.home|4
+4|Bofur|bofur@erebor.home|3
+5|Bombur|bombur@erebor.home|6
+6|Kili|kili@erebor.home|5
+7|Nori|nori@erebor.home|5

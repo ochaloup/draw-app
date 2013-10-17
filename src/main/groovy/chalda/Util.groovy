@@ -10,7 +10,7 @@ class Util {
 	 */
 	static void logMatches(processedPersons) {
 		// show the results
-		log.info("\nFound matches:")
+		log.info("Found matches:")
 		processedPersons.each{ p ->
 			log.info(p.toStringLong())
 		}
